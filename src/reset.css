@@ -1,0 +1,14 @@
+/* 滚动条宽度 14~17px 左右 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+ol,
+ul {
+  list-style: none;
+}
