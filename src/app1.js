@@ -2,6 +2,7 @@ import "./app1.css";
 import $ from "jquery";
 
 const eventBus = $(window);
+
 // 数据相关放到 M
 const m = {
   data: {
@@ -13,9 +14,11 @@ const m = {
   update(data) {
     Object.assign(m.data, data);
     eventBus.trigger("m:updated");
+    localStorage.setItem("n", m.data.n);
   },
   get() {},
 };
+
 // 视图相关放到 V
 const v = {
   el: null,
