@@ -11334,7 +11334,6 @@ var c = {
 
     c.autoBindEvents();
     eventBus.on("m:updated", function () {
-      console.log("here");
       v.render(m.data.n);
     });
   },

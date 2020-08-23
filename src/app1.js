@@ -47,7 +47,6 @@ const c = {
     v.render(m.data.n); // view = render(data)
     c.autoBindEvents();
     eventBus.on("m:updated", () => {
-      console.log("here");
       v.render(m.data.n);
     });
   },
