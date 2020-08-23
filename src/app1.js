@@ -1,52 +1,76 @@
 import "./app1.css";
 import $ from "jquery";
 
-const html = `
-<section id="app1">
-  <div id="output"><span id="number">100</span></div>
-  <div id="actions">
-    <button id="add1">+1</button>
-    <button id="minus1">-1</button>
-    <button id="mul2">*2</button>
-    <button id="divide2">÷2</button>
+// 数据相关放到 M
+const m = {
+  data: {
+    // 初始化数据
+    n: parseInt(localStorage.getItem("n")),
+  },
+};
+
+// 视图相关放到 V
+const v = {
+  el: null,
+  html: `
+  <div>
+    <div id="output">
+      <span id="number">{{n}}</span></div>
+    <div id="actions">
+      <button id="add1">+1</button>
+      <button id="minus1">-1</button>
+      <button id="mul2">*2</button>
+      <button id="divide2">÷2</button>
+    </div>
   </div>
-</section>
-`;
-const $element = $(html).prependTo($("body > .page"));
+  `,
+  init(container) {
+    v.container = $(container);
+    v.render();
+  },
+  render() {
+    if (v.el === null) {
+      v.el = $(v.html.replace("{{n}}", m.data.n)).appendTo(v.container);
+    } else {
+      const newEl = $(v.html.replace("{{n}}", m.data.n));
+      v.el.replaceWith(newEl);
+      v.el = newEl;
+    }
+  },
+};
 
-const $button1 = $("#add1");
-const $button2 = $("#minus1");
-const $button3 = $("#mul2");
-const $button4 = $("#divide2");
-const $number = $("#number");
+// 其他放到 C
+const c = {
+  init(container) {
+    v.init(container);
+    c.ui = {
+      button1: $("#add1"),
+      button2: $("#minus1"),
+      button3: $("#mul2"),
+      button4: $("#divide2"),
+      number: $("#number"),
+    };
+    c.bindEvents();
+  },
+  bindEvents() {
+    // 绑定鼠标事件
+    v.container.on("click", "#add1", () => {
+      m.data.n += 1;
+      v.render();
+    });
+    v.container.on("click", "#minus1", () => {
+      m.data.n -= 1;
+      v.render();
+    });
+    v.container.on("click", "#mul2", () => {
+      m.data.n *= 2;
+      v.render();
+    });
+    v.container.on("click", "#divide2", () => {
+      m.data.n /= 2;
+      v.render();
+    });
+  },
+};
 
-const n = localStorage.getItem("n");
-$number.text(n || 100);
-
-$button1.on("click", () => {
-  let n = parseInt($number.text());
-  n += 1;
-  localStorage.setItem("n", n);
-  $number.text(n);
-});
-$button2.on("click", () => {
-  let n = parseInt($number.text());
-  n -= 1;
-  localStorage.setItem("n", n);
-
-  $number.text(n);
-});
-$button3.on("click", () => {
-  let n = parseInt($number.text());
-  n *= 2;
-  localStorage.setItem("n", n);
-
-  $number.text(n);
-});
-$button4.on("click", () => {
-  let n = parseInt($number.text());
-  n /= 2;
-  localStorage.setItem("n", n);
-
-  $number.text(n);
-});
+export default c;

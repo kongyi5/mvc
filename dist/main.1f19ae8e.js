@@ -11288,45 +11288,77 @@ return jQuery;
 },{"process":"../../../../AppData/Local/Yarn/Data/global/node_modules/process/browser.js"}],"app1.js":[function(require,module,exports) {
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
 require("./app1.css");
 
 var _jquery = _interopRequireDefault(require("jquery"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var html = "\n<section id=\"app1\">\n  <div id=\"output\"><span id=\"number\">100</span></div>\n  <div id=\"actions\">\n    <button id=\"add1\">+1</button>\n    <button id=\"minus1\">-1</button>\n    <button id=\"mul2\">*2</button>\n    <button id=\"divide2\">\xF72</button>\n  </div>\n</section>\n";
-var $element = (0, _jquery.default)(html).prependTo((0, _jquery.default)("body > .page"));
-var $button1 = (0, _jquery.default)("#add1");
-var $button2 = (0, _jquery.default)("#minus1");
-var $button3 = (0, _jquery.default)("#mul2");
-var $button4 = (0, _jquery.default)("#divide2");
-var $number = (0, _jquery.default)("#number");
-var n = localStorage.getItem("n");
-$number.text(n || 100);
-$button1.on("click", function () {
-  var n = parseInt($number.text());
-  n += 1;
-  localStorage.setItem("n", n);
-  $number.text(n);
-});
-$button2.on("click", function () {
-  var n = parseInt($number.text());
-  n -= 1;
-  localStorage.setItem("n", n);
-  $number.text(n);
-});
-$button3.on("click", function () {
-  var n = parseInt($number.text());
-  n *= 2;
-  localStorage.setItem("n", n);
-  $number.text(n);
-});
-$button4.on("click", function () {
-  var n = parseInt($number.text());
-  n /= 2;
-  localStorage.setItem("n", n);
-  $number.text(n);
-});
+// 数据相关放到 M
+var m = {
+  data: {
+    // 初始化数据
+    n: parseInt(localStorage.getItem("n"))
+  }
+}; // 视图相关放到 V
+
+var v = {
+  el: null,
+  html: "\n  <div>\n    <div id=\"output\">\n      <span id=\"number\">{{n}}</span></div>\n    <div id=\"actions\">\n      <button id=\"add1\">+1</button>\n      <button id=\"minus1\">-1</button>\n      <button id=\"mul2\">*2</button>\n      <button id=\"divide2\">\xF72</button>\n    </div>\n  </div>\n  ",
+  init: function init(container) {
+    v.container = (0, _jquery.default)(container);
+    v.render();
+  },
+  render: function render() {
+    if (v.el === null) {
+      v.el = (0, _jquery.default)(v.html.replace("{{n}}", m.data.n)).appendTo(v.container);
+    } else {
+      var newEl = (0, _jquery.default)(v.html.replace("{{n}}", m.data.n));
+      v.el.replaceWith(newEl);
+      v.el = newEl;
+    }
+  }
+}; // 其他放到 C
+
+var c = {
+  init: function init(container) {
+    v.init(container);
+    c.ui = {
+      button1: (0, _jquery.default)("#add1"),
+      button2: (0, _jquery.default)("#minus1"),
+      button3: (0, _jquery.default)("#mul2"),
+      button4: (0, _jquery.default)("#divide2"),
+      number: (0, _jquery.default)("#number")
+    };
+    c.bindEvents();
+  },
+  bindEvents: function bindEvents() {
+    // 绑定鼠标事件
+    v.container.on("click", "#add1", function () {
+      m.data.n += 1;
+      v.render();
+    });
+    v.container.on("click", "#minus1", function () {
+      m.data.n -= 1;
+      v.render();
+    });
+    v.container.on("click", "#mul2", function () {
+      m.data.n *= 2;
+      v.render();
+    });
+    v.container.on("click", "#divide2", function () {
+      m.data.n /= 2;
+      v.render();
+    });
+  }
+};
+var _default = c;
+exports.default = _default;
 },{"./app1.css":"app1.css","jquery":"../node_modules/jquery/dist/jquery.js"}],"app2.css":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
@@ -11418,13 +11450,17 @@ require("./reset.css");
 
 require("./global.css");
 
-require("./app1.js");
+var _app = _interopRequireDefault(require("./app1.js"));
 
 require("./app2.js");
 
 require("./app3.js");
 
 require("./app4.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+_app.default.init("#app1");
 },{"./reset.css":"reset.css","./global.css":"global.css","./app1.js":"app1.js","./app2.js":"app2.js","./app3.js":"app3.js","./app4.js":"app4.js"}],"../../../../AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -11453,7 +11489,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51143" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54427" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
