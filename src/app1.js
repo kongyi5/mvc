@@ -1,14 +1,21 @@
 import "./app1.css";
 import $ from "jquery";
 
+const eventBus = $(window);
 // 数据相关放到 M
 const m = {
   data: {
     // 初始化数据
     n: parseInt(localStorage.getItem("n")),
   },
+  create() {},
+  delete() {},
+  update(data) {
+    Object.assign(m.data, data);
+    eventBus.trigger("m:updated");
+  },
+  get() {},
 };
-
 // 视图相关放到 V
 const v = {
   el: null,
@@ -39,6 +46,10 @@ const c = {
     v.init(container);
     v.render(m.data.n); // view = render(data)
     c.autoBindEvents();
+    eventBus.on("m:updated", () => {
+      console.log("here");
+      v.render(m.data.n);
+    });
   },
   events: {
     "click #add1": "add",
@@ -47,20 +58,16 @@ const c = {
     "click #divide2": "div",
   },
   add() {
-    m.data.n += 1;
-    v.render(m.data.n);
+    m.update({ n: m.data.n + 1 });
   },
   minus() {
-    m.data.n -= 1;
-    v.render(m.data.n);
+    m.update({ n: m.data.n - 1 });
   },
   mul() {
-    m.data.n *= 2;
-    v.render(m.data.n);
+    m.update({ n: m.data.n * 2 });
   },
   div() {
-    m.data.n /= 2;
-    v.render(m.data.n);
+    m.update({ n: m.data.n / 2 });
   },
   autoBindEvents() {
     for (let key in c.events) {
@@ -68,7 +75,6 @@ const c = {
       const spaceIndex = key.indexOf(" ");
       const part1 = key.slice(0, spaceIndex);
       const part2 = key.slice(spaceIndex + 1);
-      console.log(part1, part2, value);
       v.el.on(part1, part2, value);
     }
   },
