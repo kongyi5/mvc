@@ -1,6 +1,10 @@
-class Model {
+import EventBus from "./EventBus.js";
+
+class Model extends EventBus {
   constructor(options) {
-    ["data", "create", "delete", "update", "get"].forEach((key) => {
+    super(); // EventBus#constructor()
+    const key = ["data", "create", "delete", "update", "get"];
+    key.forEach((key) => {
       if (key in options) {
         this[key] = options[key];
       }

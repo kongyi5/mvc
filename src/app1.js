@@ -4,8 +4,6 @@ import Model from "./base/Model.js";
 import View from "./base/View.js";
 import EventBus from "./base/EventBus.js";
 
-const eventBus = new EventBus();
-
 // 数据相关放到 M
 const m = new Model({
   data: {
@@ -14,7 +12,7 @@ const m = new Model({
   },
   update: function (data) {
     Object.assign(m.data, data);
-    eventBus.trigger("m:updated");
+    m.trigger("m:updated");
     localStorage.setItem("n", m.data.n);
   },
 });
@@ -24,7 +22,6 @@ const init = (el) => {
   new View({
     el: el,
     data: m.data,
-    eventBus: eventBus,
     html: `
       <div>
         <div id="output">

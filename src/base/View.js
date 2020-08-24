@@ -1,8 +1,10 @@
 import $ from "jquery";
+import EventBus from "./EventBus.js";
 
-class View {
+class View extends EventBus {
   // constructor({ el, html, render, data, eventBus, events }) {
   constructor(options) {
+    super(); // EventBus#constructor()
     Object.assign(this, options);
     // this.html = html;
     // this.render = render;
@@ -12,7 +14,7 @@ class View {
     this.el = $(this.el);
     this.render(this.data);
     this.autoBindEvents();
-    this.eventBus.on("m:updated", () => {
+    this.on("m:updated", () => {
       this.render(this.data);
     });
   }
