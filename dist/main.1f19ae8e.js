@@ -11349,35 +11349,7 @@ var Model = /*#__PURE__*/function () {
 
 var _default = Model;
 exports.default = _default;
-},{}],"base/View.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _jquery = _interopRequireDefault(require("jquery"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var View = function View(_ref) {
-  var el = _ref.el,
-      html = _ref.html,
-      render = _ref.render;
-
-  _classCallCheck(this, View);
-
-  this.el = (0, _jquery.default)(el);
-  this.html = html;
-  this.render = render;
-};
-
-var _default = View;
-exports.default = _default;
-},{"jquery":"../node_modules/jquery/dist/jquery.js"}],"app1.js":[function(require,module,exports) {
+},{}],"app1.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -11390,8 +11362,6 @@ require("./app1.css");
 var _jquery = _interopRequireDefault(require("jquery"));
 
 var _Model = _interopRequireDefault(require("./base/Model.js"));
-
-var _View = _interopRequireDefault(require("./base/View.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -11407,29 +11377,23 @@ var m = new _Model.default({
     eventBus.trigger("m:updated");
     localStorage.setItem("n", m.data.n);
   }
-}); // 视图相关放到 V
-// 其他放到 C
+}); // 其他放到 C
 
-var c = {
-  v: null,
-  initV: function initV() {
-    c.v = new _View.default({
-      el: c.container,
-      html: "\n      <div>\n        <div id=\"output\">\n          <span id=\"number\">{{n}}</span></div>\n        <div id=\"actions\">\n          <button id=\"add1\">+1</button>\n          <button id=\"minus1\">-1</button>\n          <button id=\"mul2\">*2</button>\n          <button id=\"divide2\">\xF72</button>\n        </div>\n      </div>\n      ",
-      render: function render(n) {
-        if (c.v.el.children.length !== 0) c.v.el.empty();
-        (0, _jquery.default)(c.v.html.replace("{{n}}", n)).appendTo(c.v.el);
-      }
-    });
-    c.v.render(m.data.n); // view = render(data)
-  },
+var view = {
+  el: null,
+  html: "\n  <div>\n    <div id=\"output\">\n      <span id=\"number\">{{n}}</span></div>\n    <div id=\"actions\">\n      <button id=\"add1\">+1</button>\n      <button id=\"minus1\">-1</button>\n      <button id=\"mul2\">*2</button>\n      <button id=\"divide2\">\xF72</button>\n    </div>\n  </div>\n  ",
   init: function init(container) {
-    c.container = container;
-    c.initV();
-    c.autoBindEvents();
+    view.el = (0, _jquery.default)(container);
+    view.render(m.data.n); // view = render(data)
+
+    view.autoBindEvents();
     eventBus.on("m:updated", function () {
-      c.v.render(m.data.n);
+      view.render(m.data.n);
     });
+  },
+  render: function render(n) {
+    if (view.el.children.length !== 0) view.el.empty();
+    (0, _jquery.default)(view.html.replace("{{n}}", n)).appendTo(view.el);
   },
   events: {
     "click #add1": "add",
@@ -11458,18 +11422,18 @@ var c = {
     });
   },
   autoBindEvents: function autoBindEvents() {
-    for (var key in c.events) {
-      var value = c[c.events[key]];
+    for (var key in view.events) {
+      var value = view[view.events[key]];
       var spaceIndex = key.indexOf(" ");
       var part1 = key.slice(0, spaceIndex);
       var part2 = key.slice(spaceIndex + 1);
-      c.v.el.on(part1, part2, value);
+      view.el.on(part1, part2, value);
     }
   }
 };
-var _default = c;
+var _default = view;
 exports.default = _default;
-},{"./app1.css":"app1.css","jquery":"../node_modules/jquery/dist/jquery.js","./base/Model.js":"base/Model.js","./base/View.js":"base/View.js"}],"app2.css":[function(require,module,exports) {
+},{"./app1.css":"app1.css","jquery":"../node_modules/jquery/dist/jquery.js","./base/Model.js":"base/Model.js"}],"app2.css":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
@@ -11500,31 +11464,25 @@ var m = new _Model.default({
   update: function update(data) {
     Object.assign(m.data, data);
     eventBus.trigger("m:updated");
-    localStorage.setItem("index", m.data.index);
+    localStorage.setItem("app2.index", m.data.index);
   }
-}); // 视图相关放到 V
-
-var v = {
+});
+var view = {
   el: null,
   html: function html(index) {
     return "\n    <div>\n      <ol class=\"tab-bar\">\n        <li class=\"".concat(index === 0 ? "selected" : "", "\" data-index='0'><span>111111</span></li>\n        <li class=\"").concat(index === 1 ? "selected" : "", "\" data-index='1'><span>222222</span></li>\n      </ol>\n      <ol class=\"tab-content\">\n        <li class=\"").concat(index === 0 ? "active" : "", "\">\u5185\u5BB91</li>\n        <li class=\"").concat(index === 1 ? "active" : "", "\">\u5185\u5BB92</li>\n      </ol>\n    </div>\n  ");
   },
-  init: function init(el) {
-    v.el = (0, _jquery.default)(el);
-  },
   render: function render(index) {
-    if (v.el.children.length !== 0) v.el.empty();
-    (0, _jquery.default)(v.html(index)).appendTo(v.el);
-  }
-};
-var c = {
+    if (view.el.children.length !== 0) view.el.empty();
+    (0, _jquery.default)(view.html(index)).appendTo(view.el);
+  },
   init: function init(container) {
-    v.init(container);
-    v.render(m.data.index); // view = render(data)
+    view.el = (0, _jquery.default)(container);
+    view.render(m.data.index); // view = render(data)
 
-    c.autoBindEvents();
+    view.autoBindEvents();
     eventBus.on("m:updated", function () {
-      v.render(m.data.index);
+      view.render(m.data.index);
     });
   },
   events: {
@@ -11537,16 +11495,16 @@ var c = {
     });
   },
   autoBindEvents: function autoBindEvents() {
-    for (var key in c.events) {
-      var value = c[c.events[key]];
+    for (var key in view.events) {
+      var value = view[view.events[key]];
       var spaceIndex = key.indexOf(" ");
       var part1 = key.slice(0, spaceIndex);
       var part2 = key.slice(spaceIndex + 1);
-      v.el.on(part1, part2, value);
+      view.el.on(part1, part2, value);
     }
   }
 };
-var _default = c;
+var _default = view;
 exports.default = _default;
 },{"./app2.css":"app2.css","jquery":"../node_modules/jquery/dist/jquery.js","./base/Model.js":"base/Model.js"}],"app3.css":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
