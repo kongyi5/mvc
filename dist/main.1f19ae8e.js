@@ -11406,6 +11406,57 @@ var View = /*#__PURE__*/function () {
 
 var _default = View;
 exports.default = _default;
+},{"jquery":"../node_modules/jquery/dist/jquery.js"}],"base/EventBus.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _jquery = _interopRequireDefault(require("jquery"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var EventBus = /*#__PURE__*/function () {
+  function EventBus() {
+    _classCallCheck(this, EventBus);
+
+    this._eventBus = (0, _jquery.default)(window);
+  }
+
+  _createClass(EventBus, [{
+    key: "on",
+    value: function on(eventName, fn) {
+      return this._eventBus.on(eventName, fn);
+    }
+  }, {
+    key: "trigger",
+    value: function trigger(eventName, data) {
+      return this._eventBus.trigger(eventName, data);
+    }
+  }, {
+    key: "off",
+    value: function off(eventName, fn) {
+      return this._eventBus.off(eventName, fn);
+    }
+  }]);
+
+  return EventBus;
+}();
+
+var _default = EventBus; // const e = new EventBus
+// e.on()
+// e.trigger()
+// e.off()
+
+exports.default = _default;
 },{"jquery":"../node_modules/jquery/dist/jquery.js"}],"app1.js":[function(require,module,exports) {
 "use strict";
 
@@ -11422,9 +11473,11 @@ var _Model = _interopRequireDefault(require("./base/Model.js"));
 
 var _View = _interopRequireDefault(require("./base/View.js"));
 
+var _EventBus = _interopRequireDefault(require("./base/EventBus.js"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var eventBus = (0, _jquery.default)(window); // 数据相关放到 M
+var eventBus = new _EventBus.default(); // 数据相关放到 M
 
 var m = new _Model.default({
   data: {
@@ -11489,69 +11542,12 @@ var init = function init(el) {
 
 var _default = init;
 exports.default = _default;
-},{"./app1.css":"app1.css","jquery":"../node_modules/jquery/dist/jquery.js","./base/Model.js":"base/Model.js","./base/View.js":"base/View.js"}],"app2.css":[function(require,module,exports) {
+},{"./app1.css":"app1.css","jquery":"../node_modules/jquery/dist/jquery.js","./base/Model.js":"base/Model.js","./base/View.js":"base/View.js","./base/EventBus.js":"base/EventBus.js"}],"app2.css":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
-},{"_css_loader":"../../../../AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/css-loader.js"}],"base/VIew.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _jquery = _interopRequireDefault(require("jquery"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var View = /*#__PURE__*/function () {
-  // constructor({ el, html, render, data, eventBus, events }) {
-  function View(options) {
-    var _this = this;
-
-    _classCallCheck(this, View);
-
-    Object.assign(this, options); // this.html = html;
-    // this.render = render;
-    // this.data = data;
-    // this.events = events;
-    // this.eventBus = eventBus;
-
-    this.el = (0, _jquery.default)(this.el);
-    this.render(this.data);
-    this.autoBindEvents();
-    this.eventBus.on("m:updated", function () {
-      _this.render(_this.data);
-    });
-  }
-
-  _createClass(View, [{
-    key: "autoBindEvents",
-    value: function autoBindEvents() {
-      for (var key in this.events) {
-        var value = this[this.events[key]];
-        var spaceIndex = key.indexOf(" ");
-        var part1 = key.slice(0, spaceIndex);
-        var part2 = key.slice(spaceIndex + 1);
-        this.el.on(part1, part2, value);
-      }
-    }
-  }]);
-
-  return View;
-}();
-
-var _default = View;
-exports.default = _default;
-},{"jquery":"../node_modules/jquery/dist/jquery.js"}],"app2.js":[function(require,module,exports) {
+},{"_css_loader":"../../../../AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/css-loader.js"}],"app2.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -11565,11 +11561,13 @@ var _jquery = _interopRequireDefault(require("jquery"));
 
 var _Model = _interopRequireDefault(require("./base/Model.js"));
 
-var _VIew = _interopRequireDefault(require("./base/VIew"));
+var _View = _interopRequireDefault(require("./base/View.js"));
+
+var _EventBus = _interopRequireDefault(require("./base/EventBus.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var eventBus = (0, _jquery.default)(window);
+var eventBus = new _EventBus.default();
 var localKey = "app2.index";
 var m = new _Model.default({
   data: {
@@ -11584,7 +11582,7 @@ var m = new _Model.default({
 });
 
 var init = function init(el) {
-  new _VIew.default({
+  new _View.default({
     el: el,
     data: m.data,
     eventBus: eventBus,
@@ -11610,7 +11608,7 @@ var init = function init(el) {
 
 var _default = init;
 exports.default = _default;
-},{"./app2.css":"app2.css","jquery":"../node_modules/jquery/dist/jquery.js","./base/Model.js":"base/Model.js","./base/VIew":"base/VIew.js"}],"app3.css":[function(require,module,exports) {
+},{"./app2.css":"app2.css","jquery":"../node_modules/jquery/dist/jquery.js","./base/Model.js":"base/Model.js","./base/View.js":"base/View.js","./base/EventBus.js":"base/EventBus.js"}],"app3.css":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
