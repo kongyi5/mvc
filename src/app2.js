@@ -1,23 +1,21 @@
 import "./app2.css";
 import $ from "jquery";
+import Model from "./base/Model.js";
 
 const eventBus = $(window);
 const localKey = "app2.index";
 
-const m = {
+const m = new Model({
   data: {
     // 初始化数据
     index: parseInt(localStorage.getItem(localKey)) || 0,
   },
-  create() {},
-  delete() {},
-  update(data) {
+  update: function (data) {
     Object.assign(m.data, data);
     eventBus.trigger("m:updated");
     localStorage.setItem("index", m.data.index);
   },
-  get() {},
-};
+});
 
 // 视图相关放到 V
 const v = {
@@ -40,8 +38,8 @@ const v = {
     </div>
   `;
   },
-  init(container) {
-    v.el = $(container);
+  init(el) {
+    v.el = $(el);
   },
   render(index) {
     if (v.el.children.length !== 0) v.el.empty();
